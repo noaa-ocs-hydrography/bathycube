@@ -29,17 +29,15 @@ To simply grid some points and get the gridded data back, use the run_cube_gridd
         # less performant version
         from bathycube.cube import run_cube_gridding
 
-        numpoints = 1000
-        x = np.random.uniform(low=403744.5, high=403747.5, size=_numpoints)
-        y = np.random.uniform(low=4122665.5, high=4122668.5, size=_numpoints)
-        z = np.random.uniform(low=13.0, high=15.0, size=_numpoints)
-        tvu = np.random.uniform(low=0.1, high=1.0, size=_numpoints)
-        thu = np.random.uniform(low=0.3, high=1.3, size=_numpoints)
-    
-        z = _z.astype(np.float32)
-        tvu = _tvu.astype(np.float32)
-        thu = _thu.astype(np.float32)
-    
+        x = np.linspace(403744, 403747, 50)
+        y = np.linspace(4122687, 4122690, 50)
+        x, y = np.meshgrid(x, y)
+        x = x.flatten()
+        y = y.flatten()
+        z = np.linspace(10, 20, 2500)
+        tvu = np.linspace(0.3, 0.7, 2500)
+        thu = np.linspace(0.3, 0.7, 2500)
+
         numrows, numcols = (3, 3)
         resolution_x, resolution_y = (1.0, 1.0)
         
@@ -48,24 +46,31 @@ To simply grid some points and get the gridded data back, use the run_cube_gridd
 Numba version operates in the same way:
 
         # less performant version
+        import numpy as np
         from bathycube.numba_cube import run_cube_gridding
-
-        numpoints = 1000
-        x = np.random.uniform(low=403744.5, high=403747.5, size=_numpoints)
-        y = np.random.uniform(low=4122665.5, high=4122668.5, size=_numpoints)
-        z = np.random.uniform(low=13.0, high=15.0, size=_numpoints)
-        tvu = np.random.uniform(low=0.1, high=1.0, size=_numpoints)
-        thu = np.random.uniform(low=0.3, high=1.3, size=_numpoints)
-    
-        z = _z.astype(np.float32)
-        tvu = _tvu.astype(np.float32)
-        thu = _thu.astype(np.float32)
-    
+        
+        x = np.linspace(403744, 403747, 50)
+        y = np.linspace(4122687, 4122690, 50)
+        x, y = np.meshgrid(x, y)
+        x = x.flatten()
+        y = y.flatten()
+        z = np.linspace(10, 20, 2500)
+        tvu = np.linspace(0.3, 0.7, 2500)
+        thu = np.linspace(0.3, 0.7, 2500)
+        
         numrows, numcols = (3, 3)
         resolution_x, resolution_y = (1.0, 1.0)
         
         depth_grid, uncertainty_grid, ratio_grid, numhyp_grid = run_cube_gridding(z, thu, tvu, x, y, numcols, numrows, min(x), max(y), 'local', 'order1a', resolution_x, resolution_y)
 
-You can specify cube parameters as keyword arguments to this function as well.
+You can specify cube parameters as keyword arguments to these functions as well.
 
         depth_grid, uncertainty_grid, ratio_grid, numhyp_grid = run_cube_gridding(z, thu, tvu, x, y, numcols, numrows, min(x), max(y), 'local', 'order1a', resolution_x, resolution_y, variance_selection='input')
+
+The numba version takes some time to run the first time you run it in a session.  This is the JIT compile cost.  You can compile without
+running a long gridding call by using compile_now().  See numba docs to learn more about JIT compilation.
+
+        from bathycube.numba_cube import compile_now
+        
+        compile_now()
+
