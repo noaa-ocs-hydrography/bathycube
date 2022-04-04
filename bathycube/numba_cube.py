@@ -1637,8 +1637,8 @@ def cube_grid_extract_data(cg: CubeGrid, method: numbastr):
     return depth_grid, uncertainty_grid, ratio_grid, numhyp_grid
 
 
-@njit
-def cube_grid_local(depth: np.ndarray, horizontal_uncertainty: np.ndarray, vertical_uncertainty: np.ndarray,
+@njit(nogil=True)
+def cube_grid_numba(depth: np.ndarray, horizontal_uncertainty: np.ndarray, vertical_uncertainty: np.ndarray,
                     easting: np.ndarray, northing: np.ndarray, num_columns: numbai64, num_rows: numbai64,
                     minimum_easting: numbaf64, maximum_northing: numbaf64, method: numbastr, params: CubeParameters):
     """
@@ -1760,7 +1760,7 @@ def run_cube_gridding(depth: np.ndarray, horizontal_uncertainty: np.ndarray, ver
         if kpam in cp.__dir__():
             setattr(cp, kpam, kval)
     if method in ['local', 'posterior', 'prior', 'predicted']:
-        depth_grid, uncertainty_grid, ratio_grid, numhyp_grid = cube_grid_local(depth, horizontal_uncertainty, vertical_uncertainty,
+        depth_grid, uncertainty_grid, ratio_grid, numhyp_grid = cube_grid_numba(depth, horizontal_uncertainty, vertical_uncertainty,
                                                                                 easting, northing, num_columns, num_rows,
                                                                                 minimum_easting, maximum_northing, method, cp)
     else:
