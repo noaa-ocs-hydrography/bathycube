@@ -1166,6 +1166,7 @@ def cube_node_insert(node: CubeNode, new_sounding: Sounding, distance_to_node: n
         True if data was added
     """
 
+    conf_95_percent = 1.96
     if np.isnan(node.predicted_depth):
         if Debug:
             print('cube_node_insert: Sounding rejected with predicted depth of NaN')
@@ -1193,7 +1194,7 @@ def cube_node_insert(node: CubeNode, new_sounding: Sounding, distance_to_node: n
     if Debug:
         print('cube_node_insert: sounding accepted at node')
     # add horizontal positioning uncertainty, assumes 2sigma
-    dist += np.sqrt(new_sounding.horiz_unc)
+    dist += conf_95_percent * np.sqrt(new_sounding.horiz_unc)
     # TODO this asked for range (range != 0) in the original source, don't have range
     sounding_range = 0.0
     if sounding_range != 0.0 and (not np.isnan(node.predicted_depth) and node.predicted_depth):
@@ -1487,7 +1488,7 @@ def cube_grid_insert_points(cg: CubeGrid, depth: np.ndarray, horizontal_uncertai
     conf_95_percent = 1.96
     conf_99_percent = 2.95
     for i in range(depth.shape[0]):
-        max_variance_allowed = (cg.iho_fixed + cg.iho_percent * depth[i] ** 2) / conf_95_percent ** 2
+        max_variance_allowed = (cg.iho_fixed + cg.iho_percent * depth[i] ** 2) / (conf_95_percent ** 2)
         ratio = max_variance_allowed / vertical_uncertainty[i]
         if ratio <= 2.0:
             ratio = 2.0
