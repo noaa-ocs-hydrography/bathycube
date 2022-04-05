@@ -888,6 +888,7 @@ class CubeNode:
             distance from point to node
         """
 
+        conf_95_percent = 1.96
         if np.isnan(self.predicted_depth):
             self.logger.log(logging.DEBUG, f'add_point_to_node: Sounding rejected with predicted depth of NaN, sounding depth = {depth}')
             return
@@ -912,7 +913,7 @@ class CubeNode:
             return
         self.logger.log(logging.DEBUG, f'add_point_to_node: sounding accepted at node, distance {dist}m, target depth {max(calculated_captdist, 0.5)}m')
         # add horizontal positioning uncertainty, assumes 2sigma
-        dist += np.sqrt(horizontal_uncertainty)
+        dist += conf_95_percent * np.sqrt(horizontal_uncertainty)
         # TODO this asked for range (range != 0) in the original source, don't have range
         sounding_range = 0.0
         if sounding_range != 0.0 and (not np.isnan(self.predicted_depth) and self.predicted_depth):
