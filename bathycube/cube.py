@@ -1370,8 +1370,8 @@ class CubeGrid:
             self.logger.log(logging.DEBUG, f'insert_points: clipped row,column limits to use in search, ({min_x},{min_y}) ({max_x},{max_y})')
             for y in range(min_y, max_y + 1):
                 for x in range(min_x, max_x + 1):
-                    node_x = self.minimum_easting + x * self.resolution_x
-                    node_y = self.maximum_northing - y * self.resolution_y
+                    node_x = self.minimum_easting + (x * self.resolution_x) + (self.resolution_x / 2)
+                    node_y = self.maximum_northing - (y * self.resolution_y) - (self.resolution_y / 2)
                     distance_sq = (node_x - easting[i]) ** 2 + (node_y - northing[i]) ** 2
                     if distance_sq >= radius ** 2:
                         self.logger.log(logging.DEBUG, f'insert_points: rejecting point as out of distance to node at row/col, ({y}, {x})')

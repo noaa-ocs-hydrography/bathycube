@@ -1519,8 +1519,8 @@ def cube_grid_insert_points(cg: CubeGrid, depth: np.ndarray, horizontal_uncertai
         max_y = min(max_y, cg.num_rows - 1)
         for y in range(min_y, max_y + 1):
             for x in range(min_x, max_x + 1):
-                node_x = cg.minimum_easting + x * cg.resolution_x
-                node_y = cg.maximum_northing - y * cg.resolution_y
+                node_x = cg.minimum_easting + (x * cg.resolution_x) + (cg.resolution_x / 2)
+                node_y = cg.maximum_northing - (y * cg.resolution_y) - (cg.resolution_y / 2)
                 distance_sq = (node_x - easting[i]) ** 2 + (node_y - northing[i]) ** 2
                 if distance_sq >= radius ** 2:
                     if Debug:
