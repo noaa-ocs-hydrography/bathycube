@@ -503,3 +503,11 @@ def test_cube_node_hypothesis_count():
     cube_node_insert(cb, return_new_sounding(17.8, 0.0, 0.5, 0.5), 0.25)
     cube_node_queue_flush_node(cb)
     assert cube_node_hypothesis_count(cb) == 2
+
+
+def test_cube_parameters_bayes_factor_threshold():
+    params = return_default_cube_parameters('order1a', 1.0, 1.0)
+    assert params.bayes_factor_threshold == approx(0.135)
+
+    params.bayes_factor_threshold = 0.2
+    assert params.bayes_factor_threshold == approx(0.2)

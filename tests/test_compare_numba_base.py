@@ -107,3 +107,31 @@ def test_base_max():
     assert ndata[1] == approx(bdata[1], abs=0.001)
     assert ndata[2] == approx(bdata[2], abs=0.001)
     assert ndata[3] == approx(bdata[3], abs=0.001)
+
+
+def _build_step_data(n_first, n_second, depth_first, depth_second, vert_uncertainty):
+    _numpoints = n_first + n_second
+    _x = np.full(_numpoints, 1.5)
+    _y = np.full(_numpoints, 1.5)
+    _z = np.concatenate([np.full(n_first, depth_first),
+                         np.full(n_second, depth_second)]).astype(np.float32)
+    _tvu = np.full(_numpoints, vert_uncertainty, dtype=np.float32)
+    _thu = np.full(_numpoints, 0.0001, dtype=np.float32)
+
+    _numrows, _numcols = (3, 3)
+    _resolution_x, _resolution_y = (1.0, 1.0)
+    return [_z, _thu, _tvu, _x, _y, _numcols, _numrows, 0.0, 3.0, 'local', 'order1a', _resolution_x, _resolution_y]
+
+
+def test_base_step_change():
+    # all soundings land on one node, a run at one depth followed by a run at another.  quotient_limit is
+    # passed to both so that the differing defaults cannot affect the comparison
+    for args in [(100, 100, 15.0, 20.0, 0.01), (40, 40, 15.0, 18.0, 0.01),
+                 (30, 30, 15.0, 16.0, 0.01), (25, 25, 15.0, 15.8, 0.005)]:
+        data_args = _build_step_data(*args)
+
+        ndata = numbagrid(*data_args, quotient_limit=255.0)
+        bdata = basegrid(*data_args, quotient_limit=255.0)
+
+        assert ndata[0][1][1] == approx(bdata[0][1][1], abs=0.001)
+        assert ndata[1][1][1] == approx(bdata[1][1][1], abs=0.001)

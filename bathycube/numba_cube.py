@@ -53,7 +53,7 @@ cube_params_spec = {'iho_order': numbastr, 'grid_resolution_x': numbaf32, 'grid_
                     'dist_exponent': numbaf64, 'inv_dist_exponent': numbaf64, 'dist_scale': numbaf64,
                     'var_scale': numbaf64, 'iho_fixed': numbaf64, 'iho_percent': numbaf64, 'median_length': numbai32,
                     'quotient_limit': numbaf64, 'max_hypothesis_ratio': numbaf32, 'discount': numbaf64,
-                    'est_offset': numbaf64, 'bayes_factor_threshold': numbai64, 'runlength_threshold': numbai32,
+                    'est_offset': numbaf64, 'bayes_factor_threshold': numbaf64, 'runlength_threshold': numbai32,
                     'min_context': numbai32, 'max_context': numbai32, 'stddev_to_conf_scale': numbaf32,
                     'blunder_min': numbaf32, 'blunder_percent': numbaf32, 'blunder_scalar': numbaf32,
                     'capture_dist_scale': numbaf32, 'variance_selection': numbastr}
